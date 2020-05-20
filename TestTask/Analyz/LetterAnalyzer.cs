@@ -14,25 +14,35 @@ namespace TestTask.Analyz
             _stream = stream;
         }
 
+        /// <summary>
+        /// Ф-ция считывающая из входящего потока все буквы, и выводит коллекцию статистик вхождения каждой буквы.
+        /// Статистика РЕГИСТРОЗАВИСИМАЯ!
+        /// </summary>
+        /// <param name="letterPrinter">Объект для вывода данных статистики</param>
+        /// <param name="useOnlyThisCharType">Какие типы букв учитывать при подсчете</param>
         public void PrintSingleLetterStatistic(ILetterPrinter letterPrinter, CharType useOnlyThisCharType)
         {
             IList<LetterStats> singleLetterStats = FillSingleLetterStats();
 
-            var filteredLetter=FilterCharStatsByType(singleLetterStats, useOnlyThisCharType);
+            var filteredLetter = FilterCharStatsByType(singleLetterStats, useOnlyThisCharType);
             letterPrinter.Print(filteredLetter);
         }
 
-        public void PrintDoubleLetterStatistic(ConsolePrinter consolePrinter, CharType charType)
+        /// <summary>
+        /// Ф-ция считывающая из входящего потока все буквы, и выводящая коллекцию статистик вхождения парных букв.
+        /// В статистику должны попадать только пары из одинаковых букв, например АА, СС, УУ, ЕЕ и т.д.
+        /// Статистика - НЕ регистрозависимая!
+        /// </summary>
+        /// <param name="letterPrinter">Объект для вывода данных статистики</param>
+        /// <param name="useOnlyThisCharType">Какие типы букв учитывать при подсчете</param>
+        public void PrintDoubleLetterStatistic(ILetterPrinter letterPrinter, CharType useOnlyThisCharType)
         {
-            throw new NotImplementedException();
+            IList<LetterStats> singleLetterStats = FillDoubleLetterStats();
+
+            var filteredLetter = FilterCharStatsByType(singleLetterStats, useOnlyThisCharType);
+            letterPrinter.Print(filteredLetter);
         }
 
-        /// <summary>
-        /// Ф-ция считывающая из входящего потока все буквы, и возвращающая коллекцию статистик вхождения каждой буквы.
-        /// Статистика РЕГИСТРОЗАВИСИМАЯ!
-        /// </summary>
-        /// <param name="stream">Стрим для считывания символов для последующего анализа</param>
-        /// <returns>Коллекция статистик по каждой букве, что была прочитана из стрима.</returns>
         private IList<LetterStats> FillSingleLetterStats()
         {
             var dictLetter = new Dictionary<char, LetterStats>();
@@ -45,31 +55,58 @@ namespace TestTask.Analyz
 
                 if (!dictLetter.ContainsKey(c))
                 {
-                    dictLetter[c] = new LetterStats { Letter = c.ToString() };
+                    dictLetter[c] = new LetterStats { Letter = c };
                 }
 
-                IncStatistic(dictLetter[c]);
+                dictLetter[c].IncStatistic();
             }
 
             return dictLetter.Values.ToList();
         }
 
-        /// <summary>
-        /// Метод увеличивает счётчик вхождений по переданной структуре.
-        /// </summary>
-        /// <param name="letterStats"></param>
-        private void IncStatistic(LetterStats letterStats)
+        private IList<LetterStats> FillDoubleLetterStats()
         {
-            letterStats.Count++;
+            char prevChar = default;
+            // в ТЗ не указано последовательность ААА это одно двойное входждение или два. Считаем что одно
+            var dictLetter = new Dictionary<char, LetterStats>();
+            _stream.ResetPositionToStart();
+            while (!_stream.IsEof)
+            {
+                char currentChar = _stream.ReadNextChar();
+                if (char.IsControl(currentChar))
+                    continue;
+
+                // наш случай
+                if (char.ToUpper(prevChar) == char.ToUpper(currentChar))
+                {
+                    var letterStr = char.ToUpper(currentChar);
+                    if (!dictLetter.ContainsKey(letterStr))
+                    {
+                        dictLetter[letterStr] = new LetterStats { Letter = letterStr };
+                    }
+
+                    dictLetter[letterStr].IncStatistic();
+
+                    prevChar = default; // вот тут особенность обработки строки ААА - считаем что предыдущего символа не было
+                }
+                else
+                {
+                    prevChar = currentChar;
+                }
+            }
+
+            return dictLetter.Values.ToList();
+
         }
 
-        private IEnumerable<LetterStats> FilterCharStatsByType(IList<LetterStats>  letterStats, CharType charType)
-        {
-            foreach(var oneLetterStats in letterStats)
-            {
-                var firstChar = oneLetterStats.Letter[0];
 
-                bool isVowel = isVowelChar(firstChar);
+        private IEnumerable<LetterStats> FilterCharStatsByType(IList<LetterStats> letterStats, CharType charType)
+        {
+            foreach (var oneLetterStats in letterStats)
+            {
+                var letterChar = oneLetterStats.Letter; // фильтурем по первой букве, потому что в двойном сравнение буквы одинаковые
+
+                bool isVowel = isVowelChar(letterChar);
                 switch (charType)
                 {
                     case CharType.Consonants:
@@ -86,7 +123,7 @@ namespace TestTask.Analyz
 
         private bool isVowelChar(char c)
         {
-           return "aeiouаеёиоуэюяы".IndexOf(c.ToString(), StringComparison.InvariantCultureIgnoreCase) >= 0;
+            return "aeiouаеёиоуэюяы".IndexOf(c.ToString(), StringComparison.InvariantCultureIgnoreCase) >= 0;
         }
 
     }

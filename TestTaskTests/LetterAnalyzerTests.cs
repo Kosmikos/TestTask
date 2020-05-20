@@ -24,11 +24,11 @@ namespace TestTaskTests
             analyzer.PrintSingleLetterStatistic(printer, CharType.Vowel);
 
             var oneLetter = printer.lettersPrintered[0];
-            Assert.AreEqual("a", oneLetter.Letter);
+            Assert.AreEqual('a', oneLetter.Letter);
             Assert.AreEqual(2, oneLetter.Count);
 
             oneLetter = printer.lettersPrintered[1];
-            Assert.AreEqual("i", oneLetter.Letter);
+            Assert.AreEqual('i', oneLetter.Letter);
             Assert.AreEqual(4, oneLetter.Count);
         }
 
@@ -48,22 +48,22 @@ namespace TestTaskTests
             analyzer.PrintSingleLetterStatistic(printer, CharType.Vowel);
 
             var oneLetter = printer.lettersPrintered[0];
-            Assert.AreEqual("a", oneLetter.Letter);
+            Assert.AreEqual('a', oneLetter.Letter);
             Assert.AreEqual(2, oneLetter.Count);
 
             oneLetter = printer.lettersPrintered[1];
-            Assert.AreEqual("i", oneLetter.Letter);
+            Assert.AreEqual('i', oneLetter.Letter);
             Assert.AreEqual(4, oneLetter.Count);
 
             //second read
             analyzer.PrintSingleLetterStatistic(printer, CharType.Vowel);
 
             oneLetter = printer.lettersPrintered[0];
-            Assert.AreEqual("a", oneLetter.Letter);
+            Assert.AreEqual('a', oneLetter.Letter);
             Assert.AreEqual(2, oneLetter.Count);
 
             oneLetter = printer.lettersPrintered[1];
-            Assert.AreEqual("i", oneLetter.Letter);
+            Assert.AreEqual('i', oneLetter.Letter);
             Assert.AreEqual(4, oneLetter.Count);
         }
 
@@ -140,7 +140,7 @@ namespace TestTaskTests
             analyzer.PrintSingleLetterStatistic(printer, CharType.Consonants);
 
             var oneLetter = printer.lettersPrintered[3];
-            Assert.AreEqual("д", oneLetter.Letter);
+            Assert.AreEqual('д', oneLetter.Letter);
             Assert.AreEqual(3, oneLetter.Count);
         }
 
@@ -160,8 +160,110 @@ namespace TestTaskTests
             analyzer.PrintSingleLetterStatistic(printer, CharType.Vowel);
 
             var oneLetter = printer.lettersPrintered[1];
-            Assert.AreEqual("е", oneLetter.Letter);
+            Assert.AreEqual('е', oneLetter.Letter);
             Assert.AreEqual(3, oneLetter.Count);
+        }
+
+        [TestMethod]
+        public void PrintDoubleLetterStatistic_EngVowel()
+        {
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms);
+            writer.Write("HOOelloWood");
+            writer.Flush();
+
+            ms.Seek(0, SeekOrigin.Begin);
+
+            var reader = new ReadOnlyStream(ms);
+            var analyzer = new LetterAnalyzer(reader);
+            var printer = new LetterPrinterToList();
+            analyzer.PrintDoubleLetterStatistic(printer, CharType.Vowel);
+
+            var oneLetter = printer.lettersPrintered[0];
+            Assert.AreEqual('O', oneLetter.Letter);
+            Assert.AreEqual(2, oneLetter.Count);
+        }
+
+        [TestMethod]
+        public void PrintDoubleLetterStatistic_EngOneCharInStream()
+        {
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms);
+            writer.Write("H");
+            writer.Flush();
+
+            ms.Seek(0, SeekOrigin.Begin);
+
+            var reader = new ReadOnlyStream(ms);
+            var analyzer = new LetterAnalyzer(reader);
+            var printer = new LetterPrinterToList();
+            analyzer.PrintDoubleLetterStatistic(printer, CharType.Vowel);
+
+            Assert.AreEqual(0, printer.lettersPrintered.Count);
+        }
+
+        [TestMethod]
+        public void PrintDoubleLetterStatistic_RusVowel()
+        {
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms);
+            writer.Write("ДвойныыеБууквыУУу");
+            writer.Flush();
+
+            ms.Seek(0, SeekOrigin.Begin);
+
+            var reader = new ReadOnlyStream(ms);
+            var analyzer = new LetterAnalyzer(reader);
+            var printer = new LetterPrinterToList();
+            analyzer.PrintDoubleLetterStatistic(printer, CharType.Vowel);
+
+            var oneLetter = printer.lettersPrintered[0];
+            Assert.AreEqual('Ы', oneLetter.Letter);
+            Assert.AreEqual(1, oneLetter.Count);
+
+            oneLetter = printer.lettersPrintered[1];
+            Assert.AreEqual('У', oneLetter.Letter);
+            Assert.AreEqual(2, oneLetter.Count);
+        }
+
+        [TestMethod]
+        public void PrintDoubleLetterStatistic_3Letter()
+        {
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms);
+            writer.Write("УУу");
+            writer.Flush();
+
+            ms.Seek(0, SeekOrigin.Begin);
+
+            var reader = new ReadOnlyStream(ms);
+            var analyzer = new LetterAnalyzer(reader);
+            var printer = new LetterPrinterToList();
+            analyzer.PrintDoubleLetterStatistic(printer, CharType.Vowel);
+
+            var oneLetter = printer.lettersPrintered[0];
+            Assert.AreEqual('У', oneLetter.Letter);
+            Assert.AreEqual(1, oneLetter.Count);
+        }
+
+        [TestMethod]
+        public void PrintDoubleLetterStatistic_4Letter()
+        {
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms);
+            writer.Write("УУуУ");
+            writer.Flush();
+
+            ms.Seek(0, SeekOrigin.Begin);
+
+            var reader = new ReadOnlyStream(ms);
+            var analyzer = new LetterAnalyzer(reader);
+            var printer = new LetterPrinterToList();
+            analyzer.PrintDoubleLetterStatistic(printer, CharType.Vowel);
+
+            var oneLetter = printer.lettersPrintered[0];
+            Assert.AreEqual('У', oneLetter.Letter);
+            Assert.AreEqual(2, oneLetter.Count);
         }
     }
 }

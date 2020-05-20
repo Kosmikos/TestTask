@@ -8,11 +8,19 @@
         /// <summary>
         /// Буква/Пара букв для учёта статистики.
         /// </summary>
-        public string Letter;
+        public char Letter; // string создает путаница при работе с двойным вхождением - каждется что сюда надо писать ПП
 
         /// <summary>
         /// Кол-во вхождений буквы/пары.
         /// </summary>
         public int Count;
+
+        /// <summary>
+        /// Метод увеличивает счётчик вхождений по переданной структуре.
+        /// </summary>
+        public void IncStatistic()
+        {
+            Count++;
+        }
     }
 }
