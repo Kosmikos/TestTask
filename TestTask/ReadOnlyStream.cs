@@ -11,7 +11,7 @@ namespace TestTask
         {
             get
             {
-                return _localStream.Position == _localStream.Length - 1;
+                return _reader.EndOfStream;
             }
         }
 
