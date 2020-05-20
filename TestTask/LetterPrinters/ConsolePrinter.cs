@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TestTask.LetterPrinters
 {
@@ -14,8 +15,14 @@ namespace TestTask.LetterPrinters
         /// <param name="letters">Коллекция со статистикой</param>
         public void PrintStatistic(IEnumerable<LetterStats> letters)
         {
-            // TODO : Выводить на экран статистику. Выводить предварительно отсортировав по алфавиту!
-            throw new NotImplementedException();
+            var sumCount = 0;
+            foreach (var oneLetterStat in letters.OrderBy(l => l.Letter))
+            {
+                Console.WriteLine($"{oneLetterStat.Letter} : {oneLetterStat.Count}");
+                sumCount = oneLetterStat.Count + sumCount; //=+ или += зачем тут эти ухищрения - так понятней
+            }
+
+            Console.WriteLine($"ИТОГО : {sumCount}");
         }
 
     }
