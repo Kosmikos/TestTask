@@ -105,6 +105,24 @@ namespace TestTaskTests
         }
 
         [TestMethod]
+        public void PrintSingleLetterStatistic_SkipSpace()
+        {
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms);
+            writer.Write("ai ca12 3");
+            writer.Flush();
+
+            ms.Seek(0, SeekOrigin.Begin);
+
+            var reader = new ReadOnlyStream(ms);
+            var analyzer = new LetterAnalyzer(reader);
+            var printer = new LetterPrinterToList();
+            analyzer.PrintSingleLetterStatistic(printer, CharType.Consonants);
+
+            Assert.AreEqual(1, printer.lettersPrintered.Count);
+        }
+
+        [TestMethod]
         public void PrintSingleLetterStatistic_EngRemoveNotConsonants()
         {
             var ms = new MemoryStream();
@@ -290,6 +308,27 @@ namespace TestTaskTests
             var ms = new MemoryStream();
             var writer = new StreamWriter(ms);
             writer.Write("шшШШ66333");
+            writer.Flush();
+
+            ms.Seek(0, SeekOrigin.Begin);
+
+            var reader = new ReadOnlyStream(ms);
+            var analyzer = new LetterAnalyzer(reader);
+            var printer = new LetterPrinterToList();
+            analyzer.PrintDoubleLetterStatistic(printer, CharType.Consonants);
+
+            var oneLetter = printer.lettersPrintered[0];
+            Assert.AreEqual('Ш', oneLetter.Letter);
+            Assert.AreEqual(2, oneLetter.Count);
+            Assert.AreEqual(1, printer.lettersPrintered.Count);
+        }
+
+        [TestMethod]
+        public void PrintDoubleLetterStatistic_SkipSpace()
+        {
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms);
+            writer.Write("шш  ШШ  ");
             writer.Flush();
 
             ms.Seek(0, SeekOrigin.Begin);

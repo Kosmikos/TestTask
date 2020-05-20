@@ -101,12 +101,16 @@ namespace TestTask.Analyz
 
         private bool IsSkippedChar(char c)
         {
-            if (char.IsControl(c))
-                return true;
-            if (char.IsNumber(c))
-                return true;
+            return !char.IsLetter(c);
 
-            return false;
+            //if (char.IsControl(c))
+            //    return true;
+            //if (char.IsNumber(c))
+            //    return true;
+            //if (c == ' ')
+            //    return true;
+
+            //return false;
 
         }
         private IEnumerable<LetterStats> FilterCharStatsByType(IList<LetterStats> letterStats, CharType charType)
