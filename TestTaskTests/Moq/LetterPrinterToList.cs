@@ -8,7 +8,7 @@ namespace TestTaskTests
     public class LetterPrinterToList : ILetterPrinter
     {
         public List<LetterStats> lettersPrintered;
-        public void Print(IEnumerable<LetterStats> letters)
+        public void PrintStatistic(IEnumerable<LetterStats> letters)
         {
             lettersPrintered = letters.ToList();
         }

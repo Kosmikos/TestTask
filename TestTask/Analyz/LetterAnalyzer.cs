@@ -25,7 +25,7 @@ namespace TestTask.Analyz
             IList<LetterStats> singleLetterStats = FillSingleLetterStats();
 
             var filteredLetter = FilterCharStatsByType(singleLetterStats, useOnlyThisCharType);
-            letterPrinter.Print(filteredLetter);
+            letterPrinter.PrintStatistic(filteredLetter);
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace TestTask.Analyz
             IList<LetterStats> singleLetterStats = FillDoubleLetterStats();
 
             var filteredLetter = FilterCharStatsByType(singleLetterStats, useOnlyThisCharType);
-            letterPrinter.Print(filteredLetter);
+            letterPrinter.PrintStatistic(filteredLetter);
         }
 
         private IList<LetterStats> FillSingleLetterStats()
@@ -50,7 +50,7 @@ namespace TestTask.Analyz
             while (!_stream.IsEof)
             {
                 char c = _stream.ReadNextChar();
-                if (char.IsControl(c))
+                if (IsSkippedChar(c))
                     continue;
 
                 if (!dictLetter.ContainsKey(c))
@@ -73,7 +73,7 @@ namespace TestTask.Analyz
             while (!_stream.IsEof)
             {
                 char currentChar = _stream.ReadNextChar();
-                if (char.IsControl(currentChar))
+                if (IsSkippedChar(currentChar))
                     continue;
 
                 // наш случай
@@ -99,7 +99,16 @@ namespace TestTask.Analyz
 
         }
 
+        private bool IsSkippedChar(char c)
+        {
+            if (char.IsControl(c))
+                return true;
+            if (char.IsNumber(c))
+                return true;
 
+            return false;
+
+        }
         private IEnumerable<LetterStats> FilterCharStatsByType(IList<LetterStats> letterStats, CharType charType)
         {
             foreach (var oneLetterStats in letterStats)
