@@ -46,11 +46,19 @@ namespace TestTask
                     try
                     {
                         var consolePrinter = new ConsolePrinter();
-                        var letterAnalyzer = new LetterAnalyzer(GetInputStream(args[0]));
-                        letterAnalyzer.PrintSingleLetterStatistic(consolePrinter, CharType.Vowel);
+                        using (var streamData = GetInputStream(args[0]))
+                        {
+                            var letterAnalyzer = new LetterAnalyzer(streamData);
+                            letterAnalyzer.PrintSingleLetterStatistic(consolePrinter, CharType.Vowel);
+                        }
 
-                        letterAnalyzer = new LetterAnalyzer(GetInputStream(args[1]));
-                        letterAnalyzer.PrintDoubleLetterStatistic(consolePrinter, CharType.Consonants);
+                        using (var streamData = GetInputStream(args[1]))
+                        {
+                            var letterAnalyzer = new LetterAnalyzer(streamData);
+                            letterAnalyzer.PrintDoubleLetterStatistic(consolePrinter, CharType.Vowel);
+                        }
+
+                        
 
 
                         //IReadOnlyStream inputStream1 = GetInputStream(args[0]);
@@ -83,6 +91,9 @@ namespace TestTask
             }
             Console.WriteLine(info);
         }
+
+
+
         /// <summary>
         /// Ф-ция возвращает экземпляр потока с уже загруженным файлом для последующего посимвольного чтения.
         /// </summary>
@@ -90,7 +101,7 @@ namespace TestTask
         /// <returns>Поток для последующего чтения.</returns>
         private static IReadOnlyStream GetInputStream(string fileFullPath)
         {
-            return new ReadOnlyStream(fileFullPath);
+            return new ReadOnlyFileStream(fileFullPath);
         }
 
         /// <summary>

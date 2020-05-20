@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TestTask.LetterPrinters
 {
-    class ConsolePrinter : ILetterPrinter
+    public class ConsolePrinter : ILetterPrinter
     {
         public void Print(IEnumerable<LetterStats> letters)
         {
