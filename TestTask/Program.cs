@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using TestTask.Analyz;
+using TestTask.LetterPrinters;
 
 namespace TestTask
 {
@@ -41,18 +43,32 @@ namespace TestTask
                         return;
                     }
 
-                    IReadOnlyStream inputStream1 = GetInputStream(args[0]);
-                    IReadOnlyStream inputStream2 = GetInputStream(args[1]);
+                    try
+                    {
+                        var consolePrinter = new ConsolePrinter();
+                        var letterAnalyzer = new LetterAnalyzer(GetInputStream(args[0]));
+                        letterAnalyzer.PrintSingleLetterStatistic(consolePrinter, CharType.Vowel);
 
-                    IList<LetterStats> singleLetterStats = FillSingleLetterStats(inputStream1);
-                    IList<LetterStats> doubleLetterStats = FillDoubleLetterStats(inputStream2);
+                        letterAnalyzer = new LetterAnalyzer(GetInputStream(args[1]));
+                        letterAnalyzer.PrintDoubleLetterStatistic(consolePrinter, CharType.Consonants);
 
-                    RemoveCharStatsByType(singleLetterStats, CharType.Vowel);
-                    RemoveCharStatsByType(doubleLetterStats, CharType.Consonants);
 
-                    PrintStatistic(singleLetterStats);
-                    PrintStatistic(doubleLetterStats);
+                        //IReadOnlyStream inputStream1 = GetInputStream(args[0]);
+                        //IReadOnlyStream inputStream2 = GetInputStream(args[1]);
 
+                        //IList<LetterStats> singleLetterStats = FillSingleLetterStats(inputStream1);
+                        //IList<LetterStats> doubleLetterStats = FillDoubleLetterStats(inputStream2);
+
+                        //RemoveCharStatsByType(singleLetterStats, CharType.Vowel);
+                        //RemoveCharStatsByType(doubleLetterStats, CharType.Consonants);
+
+                        //PrintStatistic(singleLetterStats);
+                        //PrintStatistic(doubleLetterStats);
+                    }
+                    catch(Exception ex)
+                    {
+                        Console.WriteLine($"Exception: {ex.Message}");
+                    }
                     Console.ReadKey();
                     break;
             }

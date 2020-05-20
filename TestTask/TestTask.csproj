@@ -42,7 +42,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analyz\LetterAnalyzer.cs" />
     <Compile Include="CharType.cs" />
+    <Compile Include="LetterPrinters\ConsolePrinter.cs" />
+    <Compile Include="LetterPrinters\ILetterPrinter.cs" />
     <Compile Include="IReadOnlyStream.cs" />
     <Compile Include="LetterStats.cs" />
     <Compile Include="Program.cs" />
