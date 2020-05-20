@@ -5,6 +5,15 @@ namespace TestTask
 {
     public class Program
     {
+        static string info = @"===== Программа для подсчета вхождений букв в файлах ===== 
+       Запуск без ключей:
+         Программа принимает на входе 2 пути до файлов.
+         Анализирует в первом файле кол-во вхождений каждой буквы (регистрозависимо). Например А, б, Б, Г и т.д.
+         Анализирует во втором файле кол-во вхождений парных букв (не регистрозависимо). Например АА, Оо, еЕ, тт и т.д.
+         По окончанию работы - выводит данную статистику на экран.
+        
+       -h - показать описание программы";
+
 
         /// <summary>
         /// Программа принимает на входе 2 пути до файлов.
@@ -16,21 +25,48 @@ namespace TestTask
         /// Второй параметр - путь до второго файла.</param>
         static void Main(string[] args)
         {
-            IReadOnlyStream inputStream1 = GetInputStream(args[0]);
-            IReadOnlyStream inputStream2 = GetInputStream(args[1]);
+            var key = "";
+            if (args.Length > 0) key = args[0];
 
-            IList<LetterStats> singleLetterStats = FillSingleLetterStats(inputStream1);
-            IList<LetterStats> doubleLetterStats = FillDoubleLetterStats(inputStream2);
+            switch (key)
+            {
+                case "-h":
+                    ShowHelp();
+                    break;
 
-            RemoveCharStatsByType(singleLetterStats, CharType.Vowel);
-            RemoveCharStatsByType(doubleLetterStats, CharType.Consonants);
+                default:
+                    if (args.Length < 2)
+                    {
+                        ShowHelp("Неверные параметры запуска");
+                        return;
+                    }
 
-            PrintStatistic(singleLetterStats);
-            PrintStatistic(doubleLetterStats);
+                    IReadOnlyStream inputStream1 = GetInputStream(args[0]);
+                    IReadOnlyStream inputStream2 = GetInputStream(args[1]);
 
-            // TODO : Необжодимо дождаться нажатия клавиши, прежде чем завершать выполнение программы.
+                    IList<LetterStats> singleLetterStats = FillSingleLetterStats(inputStream1);
+                    IList<LetterStats> doubleLetterStats = FillDoubleLetterStats(inputStream2);
+
+                    RemoveCharStatsByType(singleLetterStats, CharType.Vowel);
+                    RemoveCharStatsByType(doubleLetterStats, CharType.Consonants);
+
+                    PrintStatistic(singleLetterStats);
+                    PrintStatistic(doubleLetterStats);
+
+                    Console.ReadKey();
+                    break;
+            }
         }
 
+        static void ShowHelp(string msg = "")
+        {
+            if (!string.IsNullOrEmpty(msg))
+            {
+                Console.WriteLine(msg);
+                Console.WriteLine();
+            }
+            Console.WriteLine(info);
+        }
         /// <summary>
         /// Ф-ция возвращает экземпляр потока с уже загруженным файлом для последующего посимвольного чтения.
         /// </summary>
@@ -99,7 +135,7 @@ namespace TestTask
                 case CharType.Vowel:
                     break;
             }
-            
+
         }
 
         /// <summary>
