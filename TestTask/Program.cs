@@ -49,7 +49,7 @@ namespace TestTask
                         using (var streamData = GetInputStream(args[0]))
                         {
                             var letterAnalyzer = new LetterAnalyzer(streamData);
-                            letterAnalyzer.PrintSingleLetterStatistic(consolePrinter, CharType.Vowel);
+                            letterAnalyzer.PrintSingleLetterStatistic(consolePrinter, CharType.Consonants);
                         }
 
                         using (var streamData = GetInputStream(args[1]))
@@ -60,6 +60,8 @@ namespace TestTask
 
                         
 
+                        // начальная логика программы - не поддается тестированию
+                        // удаление типов букв и вывод - трудная логика - заменена на вывод указанных букв - это проще
 
                         //IReadOnlyStream inputStream1 = GetInputStream(args[0]);
                         //IReadOnlyStream inputStream2 = GetInputStream(args[1]);

@@ -63,13 +63,13 @@ namespace TestTask.Analyz
             letterStats.Count++;
         }
 
-        IEnumerable<LetterStats> FilterCharStatsByType(IList<LetterStats>  letterStats, CharType charType)
+        private IEnumerable<LetterStats> FilterCharStatsByType(IList<LetterStats>  letterStats, CharType charType)
         {
             foreach(var oneLetterStats in letterStats)
             {
                 var firstChar = oneLetterStats.Letter[0];
 
-                bool isVowel = "aeiou".IndexOf(firstChar.ToString(), StringComparison.InvariantCultureIgnoreCase) >= 0;
+                bool isVowel = isVowelChar(firstChar);
                 switch (charType)
                 {
                     case CharType.Consonants:
@@ -82,6 +82,11 @@ namespace TestTask.Analyz
                         break;
                 }
             }
+        }
+
+        private bool isVowelChar(char c)
+        {
+           return "aeiouаеёиоуэюяы".IndexOf(c.ToString(), StringComparison.InvariantCultureIgnoreCase) >= 0;
         }
 
     }
