@@ -50,7 +50,7 @@ namespace TestTask.Analyz
             while (!_stream.IsEof)
             {
                 char c = _stream.ReadNextChar();
-                if (IsSkippedChar(c))
+                if (!char.IsLetter(c))
                     continue;
 
                 if (!dictLetter.ContainsKey(c))
@@ -73,8 +73,14 @@ namespace TestTask.Analyz
             while (!_stream.IsEof)
             {
                 char currentChar = _stream.ReadNextChar();
-                if (IsSkippedChar(currentChar))
+                if (IsNotMatterChar(currentChar))
                     continue;
+
+                if (!char.IsLetter(currentChar))
+                {
+                    prevChar = default; // сбосим предыдущий символ, потому что встаретили НЕ буквы, не значищие символы пропустили выше
+                    continue;
+                }
 
                 // наш случай
                 if (char.ToUpper(prevChar) == char.ToUpper(currentChar))
@@ -99,18 +105,13 @@ namespace TestTask.Analyz
 
         }
 
-        private bool IsSkippedChar(char c)
+        private bool IsNotMatterChar(char c)
         {
-            return !char.IsLetter(c);
-
-            //if (char.IsControl(c))
-            //    return true;
-            //if (char.IsNumber(c))
-            //    return true;
-            //if (c == ' ')
-            //    return true;
-
-            //return false;
+            if (char.IsControl(c))
+                return true;
+            if (c == ' ')
+                return true;
+            return false;
 
         }
         private IEnumerable<LetterStats> FilterCharStatsByType(IList<LetterStats> letterStats, CharType charType)

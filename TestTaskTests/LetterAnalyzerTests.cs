@@ -343,5 +343,44 @@ namespace TestTaskTests
             Assert.AreEqual(2, oneLetter.Count);
             Assert.AreEqual(1, printer.lettersPrintered.Count);
         }
+
+        [TestMethod]
+        public void PrintDoubleLetterStatistic_NotDouble()
+        {
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms);
+            writer.Write("A1A");
+            writer.Flush();
+
+            ms.Seek(0, SeekOrigin.Begin);
+
+            var reader = new ReadOnlyStream(ms);
+            var analyzer = new LetterAnalyzer(reader);
+            var printer = new LetterPrinterToList();
+            analyzer.PrintDoubleLetterStatistic(printer, CharType.Vowel);
+
+            Assert.AreEqual(0, printer.lettersPrintered.Count);
+        }
+
+        [TestMethod]
+        public void PrintDoubleLetterStatistic_NumberInString()
+        {
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms);
+            writer.Write("A1A AA");
+            writer.Flush();
+
+            ms.Seek(0, SeekOrigin.Begin);
+
+            var reader = new ReadOnlyStream(ms);
+            var analyzer = new LetterAnalyzer(reader);
+            var printer = new LetterPrinterToList();
+            analyzer.PrintDoubleLetterStatistic(printer, CharType.Vowel);
+
+            var oneLetter = printer.lettersPrintered[0];
+            Assert.AreEqual('A', oneLetter.Letter);
+            Assert.AreEqual(1, oneLetter.Count);
+            Assert.AreEqual(1, printer.lettersPrintered.Count);
+        }
     }
 }
